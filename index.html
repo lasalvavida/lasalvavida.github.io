@@ -1,1 +1,30 @@
-Hello World
+<html>
+	<head>
+		<script src="js/lib/jquery.js"></script>
+		<script src="js/PostLoader.js"></script>
+		<script>
+			function loadPosts() {
+				PostLoader.loadAllPosts('.', postsLoaded);
+			}
+			function postsLoaded(posts) {
+				for (var i=0; i<posts.length; i++) {
+					var post = posts[i];
+
+					var postDiv = $('<div>');
+					postDiv.attr('id', i);
+					postDiv.addClass('post');
+					$('#posts').append(postDiv);
+
+					PostLoader.getPostHTML('.', i, contentReady);
+				}
+			}
+			function contentReady(postNum, html) {
+				$(postNum).html(html);
+			}
+		</script>
+	</head>
+	<body onload="loadPosts()">
+		<div id="posts">
+		</div>
+	</body>
+</html>
