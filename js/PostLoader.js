@@ -20,10 +20,11 @@ PostLoader.loadAllPosts = function(url, done) {
  * Calls done with the post metadata when done
  */
 function loadPostRecur(url, num, result, done) {
-	$.getJSON(url + '/posts/' + num + '/info.json', function(data) {
+	$.getJSON(url + '/posts/' + num + '/info.json', function() {
+	}).done(function(data) {
 		result.push(data);
 		loadPostRecur(url, num + 1, result, done);
-	}).error(function() {
+	}).fail(function(error) {
 		done(result);
 	});
 }
@@ -37,4 +38,29 @@ PostLoader.getPostHTML = function(url, postNum, done) {
 	$.get(url + '/posts/' + postNum + '/content.html', function(data) {
 		done(postNum, data);
 	});
+}
+
+/**
+ * Creates a post header from the info.json
+ */
+PostLoader.createPostHeader = function(postInfo) {
+	var headerDiv = $('<div>');
+	headerDiv.addClass('post-header');
+
+	var titleDiv = $('<div>');
+	titleDiv.addClass('post-title');
+	titleDiv.html(postInfo.title);
+	headerDiv.append(titleDiv);
+
+	var authorDiv = $('<div>');
+	authorDiv.addClass('post-author');
+	authorDiv.html(postInfo.author);
+	headerDiv.append(authorDiv);
+
+	var dateDiv = $('<div>');
+	dateDiv.addClass('post-date');
+	dateDiv.html(postInfo.date);
+	headerDiv.append(dateDiv);
+
+	return headerDiv;
 }

@@ -1,0 +1,20 @@
+body {
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+.post-title {
+	font-size: x-large;
+}
+
+.post-author {
+	font-size: small;
+	color: darkgray;
+}
+
+.post-date {
+	font-size: x-small;
+	color: gray;
+}
+.post-header {
+	padding-bottom: 20px;
+}

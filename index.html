@@ -1,12 +1,23 @@
 <html>
 	<head>
+		<link rel="stylesheet" type="text/css", href="css/default.css">
 		<script src="js/lib/jquery.js"></script>
 		<script src="js/PostLoader.js"></script>
+
+		<script type="text/x-mathjax-config">
+  			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 		<script>
+			var postInfo;
+
 			function loadPosts() {
-				PostLoader.loadAllPosts('.', postsLoaded);
+				PostLoader.loadAllPosts('http://lasalvavida.github.io', postsLoaded);
 			}
+
 			function postsLoaded(posts) {
+				postInfo = posts;
 				for (var i=0; i<posts.length; i++) {
 					var post = posts[i];
 
@@ -15,15 +26,22 @@
 					postDiv.addClass('post');
 					$('#posts').append(postDiv);
 
-					PostLoader.getPostHTML('.', i, contentReady);
+					PostLoader.getPostHTML('http://lasalvavida.github.io', i, contentReady);
 				}
 			}
+
 			function contentReady(postNum, html) {
-				$(postNum).html(html);
+				var postDiv = $('#' + postNum + '.post');
+				postDiv.append(PostLoader.createPostHeader(postInfo[postNum]));
+				postDiv.append($(html));
 			}
 		</script>
 	</head>
 	<body onload="loadPosts()">
+		<div id="header">
+
+		</div>
+
 		<div id="posts">
 		</div>
 	</body>
