@@ -72,7 +72,7 @@ var Blog =
 	  cancellation : true
 	});
 
-	var postServer = 'http://lasalvavida.github.io';
+	var postServer = 'http://localhost:8080';
 
 	function postsLoaded(posts, order) {
 	  for (var i = 0; i < order.length; i++) {
@@ -93,24 +93,87 @@ var Blog =
 	    return post.content;
 	  }).then(function(contentString) {
 	    postDiv.append(contentString);
+	    var title = postDiv.find('.post-title');
+	    title.click(function() {
+	      window.location.href = 'index.html?singlePost=' + num;
+	    });
 	  });
 	}
 
+	$('.title').click(function() {
+	  window.location.href = 'index.html';
+	});
+
 	var singlePost = getParameterByName('singlePost');
+	var postsPerPage = getParameterByName('postsPerPage');
+	var page = getParameterByName('page');
 	var posts;
 	var order = [];
-	if (singlePost !== undefined && singlePost !== '') {
-	  posts = PostLoader.loadPost(postServer, parseInt(singlePost));
-	  order.push(singlePost);
-	} else {
-	  var first = 0;
-	  var last = 2;
-	  for(var i = last; i >= first; i--) {
-	    order.push(i);
-	  }
-	  posts = PostLoader.loadPosts(postServer, first, last);
+
+	function makePrevPageButton(postsPerPage, page) {
+	  var prev = $('<div>');
+	  prev.addClass('right');
+	  prev.addClass('nav-item');
+	  prev.html('Previous Page &rarr;');
+	  prev.click(function() {
+	    window.location.href = 'index.html?postsPerPage=' + postsPerPage + '&page=' + (page + 1);
+	  });
+	  $('.nav-bar').append(prev);
 	}
-	postsLoaded(posts, order);
+
+	function makeNextPageButton(postsPerPage, page) {
+	  var next = $('<div>');
+	  next.addClass('left');
+	  next.addClass('nav-item');
+	  next.html('&larr; Next Page');
+	  next.click(function() {
+	    window.location.href = 'index.html?postsPerPage=' + postsPerPage + '&page=' + (page - 1);
+	  });
+	  $('.nav-bar').append(next);
+	}
+
+	PostLoader.getManifest(postServer)
+	  .then(function(manifest) {
+	    var numPosts = manifest.numPosts;
+	    if (postsPerPage === undefined || postsPerPage === '') {
+	      postsPerPage = 3;
+	    } else {
+	      postsPerPage = parseInt(postsPerPage);
+	    }
+	    if (page === undefined || page === '') {
+	      page = 0;
+	    } else {
+	      page = parseInt(page);
+	    }
+	    if (singlePost !== undefined && singlePost !== '') {
+	      posts = PostLoader.loadPost(postServer, parseInt(singlePost));
+	      order.push(singlePost);
+	    } else {
+	      var last = (numPosts - 1) - page * postsPerPage;
+	      var first = last - postsPerPage + 1;
+	      if (first < 0) {
+	        first = 0;
+	      } else if (first >= numPosts) {
+	        first = numPosts - 1;
+	      }
+	      if (last < 0) {
+	        last = 0;
+	      } else if (last >= numPosts) {
+	        last = numPosts - 1;
+	      }
+	      if (first !== 0){
+	        makePrevPageButton(postsPerPage, page);
+	      }
+	      if (last !== numPosts - 1) {
+	        makeNextPageButton(postsPerPage, page);
+	      }
+	      for(var i = last; i >= first; i--) {
+	        order.push(i);
+	      }
+	      posts = PostLoader.loadPosts(postServer, first, last);
+	    }
+	    postsLoaded(posts, order);
+	});
 
 
 /***/ },
