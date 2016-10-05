@@ -11,25 +11,27 @@ window.$ = window.jquery = $;
 window.Vision = window.visionjs = Vision;
 window.Promise = window.bluebird = Promise;
 
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return undefined;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
 Promise.config({
   cancellation : true
 });
 
 var postServer = 'http://localhost:8080';
-var Blog = {};
 
-Blog.loadPosts = function() {
-  var first = 0;
-  var last = 2;
-  var posts = PostLoader.loadPosts(postServer, first, last);
-  postsLoaded(posts, first, last);
-}
-
-function postsLoaded(posts, first, last) {
-  var postDivs = {};
-  for (var i=last; i>=first; i--) {
-    var post = posts[i];
-    postLoaded(post, i);
+function postsLoaded(posts, order) {
+  for (var i = 0; i < order.length; i++) {
+    var index = order[i];
+    var post = posts[index];
+    postLoaded(post, index);
   }
 }
 
@@ -47,4 +49,18 @@ function postLoaded(post, num) {
   });
 }
 
-module.exports = Blog;
+var singlePost = parseInt(getParameterByName('singlePost'));
+var posts;
+var order = [];
+if (singlePost !== undefined && singlePost !== '') {
+  posts = PostLoader.loadPost(postServer, singlePost);
+  order.push(singlePost);
+} else {
+  var first = 0;
+  var last = 2;
+  for(var i = last; i >= first; i--) {
+    order.push(i);
+  }
+  posts = PostLoader.loadPosts(postServer, first, last);
+}
+postsLoaded(posts, order);
