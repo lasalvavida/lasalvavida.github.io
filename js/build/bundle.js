@@ -72,7 +72,7 @@ var Blog =
 	  cancellation : true
 	});
 
-	var postServer = 'http://localhost:8080';
+	var postServer = 'http://lasalvavida.github.io';
 
 	function postsLoaded(posts, order) {
 	  for (var i = 0; i < order.length; i++) {
@@ -96,11 +96,11 @@ var Blog =
 	  });
 	}
 
-	var singlePost = parseInt(getParameterByName('singlePost'));
+	var singlePost = getParameterByName('singlePost');
 	var posts;
 	var order = [];
 	if (singlePost !== undefined && singlePost !== '') {
-	  posts = PostLoader.loadPost(postServer, singlePost);
+	  posts = PostLoader.loadPost(postServer, parseInt(singlePost));
 	  order.push(singlePost);
 	} else {
 	  var first = 0;
