@@ -60,7 +60,6 @@ PostLoader.loadPosts = function(url, first, last) {
 }
 
 PostLoader.loadPost = function(url, post) {
-	console.log(post);
 	var promises = {};
 	promises[post] = {
 		info : PostLoader.getPostInfo(url, post),
