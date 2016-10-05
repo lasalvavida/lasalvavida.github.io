@@ -72,7 +72,7 @@ var Blog =
 	  cancellation : true
 	});
 
-	var postServer = 'http://localhost:8080';
+	var postServer = 'http://lasalvavida.github.io';
 
 	function postsLoaded(posts, order) {
 	  for (var i = 0; i < order.length; i++) {
