@@ -59,6 +59,16 @@ PostLoader.loadPosts = function(url, first, last) {
 	return promises;
 }
 
+PostLoader.loadPost = function(url, post) {
+	console.log(post);
+	var promises = {};
+	promises[post] = {
+		info : PostLoader.getPostInfo(url, post),
+		content : PostLoader.getPostContent(url, post)
+	};
+	return promises;
+}
+
 PostLoader.createPostHeader = function(postInfo) {
 	var headerDiv = $('<div>');
 	headerDiv.addClass('post-header');
