@@ -1,0 +1,80 @@
+body  {
+	font-family : "Trebuchet MS", Helvetica, sans-serif;
+	margin : 0px;
+}
+
+.post-title {
+	font-size : x-large;
+}
+
+.subtitle {
+	font-size : medium;
+}
+
+.post-author {
+	font-size : small;
+	color : darkgray;
+}
+
+.post-date {
+	font-size : x-small;
+	color : gray;
+}
+
+.post-header {
+	background-color : #D7DAE0;
+	border-radius : 0 0 10px 10px;
+	box-sizing: border-box;
+	padding : 20px 10px;
+	width : 100%;
+}
+
+.post-content {
+	box-sizing: border-box;
+	padding : 20px 10px;
+	width : 100%;
+}
+
+.mat-cell {
+  width : 60px;
+  padding : 2px;
+  margin : 2px;
+  display : inline-block;
+  border : 2px solid #ccc;
+  border-radius : 5px;
+  box-sizing : border-box;
+}
+
+.mat {
+  position : relative;
+  display : inline-block;
+  margin : 10px;
+}
+
+.mat:before, .mat:after {
+  content : "";
+  position : absolute;
+  top : 0;
+  border : 1px solid #000;
+  width : 6px;
+  height : 100%;
+}
+
+.mat:before {
+  left : -6px;
+  border-right : 0px;
+}
+
+.mat:after {
+  right : -6px;
+  border-left : 0px;
+}
+
+.title {
+	background-color : #7AADFF;
+	box-sizing: border-box;
+	color : white;
+	font-size : xx-large;
+	padding : 40px 20px;
+	width : 100%;
+}

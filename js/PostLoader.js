@@ -1,48 +1,64 @@
-/**
- * Loads post metadata, returns an array of the info.json data from
- * each post in the url given.
- *
- * Each post is expected to be sandboxed in its own folder within the
- * provided path.
- *
- * Calls the done callback provided once all of the posts are loaded
- */
-var PostLoader = PostLoader || {};
+'use strict';
+var $ = require('jquery');
+var Promise = require('bluebird');
+var defined = require('defined');
 
-PostLoader.loadAllPosts = function(url, done) {
-	var num = 0;
-	var result = [];
-	loadPostRecur(url, num, result, done);
+var PostLoader = {
+	manifest : undefined,
+	postInfoCache : {},
+	postContentCache : {}
+};
+
+PostLoader.getManifest = function(url) {
+	if (defined(PostLoader.manifest)) {
+		return Promise.resolve(PostLoader.manifest);
+	} else {
+		return $.getJSON(url + '/posts/manifest.json')
+			.then(function(manifestJSON) {
+				PostLoader.manifest = manifestJSON;
+				return manifestJSON;
+			});
+	}
 }
 
-/**
- * Loads this post by number then gets the next one.
- * Calls done with the post metadata when done
- */
-function loadPostRecur(url, num, result, done) {
-	$.getJSON(url + '/posts/' + num + '/info.json', function() {
-	}).done(function(data) {
-		result.push(data);
-		loadPostRecur(url, num + 1, result, done);
-	}).fail(function(error) {
-		done(result);
-	});
+PostLoader.getPostInfo = function(url, postNum) {
+	var cachedInfo = PostLoader.postInfoCache['' + postNum];
+	if (defined(cachedInfo)) {
+		return Promise.resolve(cachedInfo);
+	} else {
+		return $.getJSON(url + '/posts/' + postNum + '/info.json')
+			.then(function(infoJSON) {
+				PostLoader.postInfoCache['' + postNum] = infoJSON;
+				return infoJSON;
+			});
+	}
 }
 
-/**
- * Returns content.html for a particular post number.
- *
- * Calls the done callback provided with the html
- */
-PostLoader.getPostHTML = function(url, postNum, done) {
-	$.get(url + '/posts/' + postNum + '/content.html', function(data) {
-		done(postNum, data);
-	});
+PostLoader.getPostContent = function(url, postNum) {
+	var cachedContent = PostLoader.postContentCache['' + postNum];
+	if (defined(cachedContent)) {
+		return Promise.resolve(cachedContent);
+	} else {
+		return $.get(url + '/posts/' + postNum + '/content.html')
+			.then(function(contentString) {
+				contentString = contentString.replace(/\$\{LOCAL\_PATH\}/g, url + '/posts/' + postNum);
+				PostLoader.postContentCache['' + postNum] = contentString;
+				return contentString;
+			})
+	}
 }
 
-/**
- * Creates a post header from the info.json
- */
+PostLoader.loadPosts = function(url, first, last) {
+	var promises = {};
+	for (var i = first; i <= last; i++) {
+		promises[i] = {
+			info : PostLoader.getPostInfo(url, i),
+			content : PostLoader.getPostContent(url, i)
+		};
+	}
+	return promises;
+}
+
 PostLoader.createPostHeader = function(postInfo) {
 	var headerDiv = $('<div>');
 	headerDiv.addClass('post-header');
@@ -52,11 +68,6 @@ PostLoader.createPostHeader = function(postInfo) {
 	titleDiv.html(postInfo.title);
 	headerDiv.append(titleDiv);
 
-	var authorDiv = $('<div>');
-	authorDiv.addClass('post-author');
-	authorDiv.html(postInfo.author);
-	headerDiv.append(authorDiv);
-
 	var dateDiv = $('<div>');
 	dateDiv.addClass('post-date');
 	dateDiv.html(postInfo.date);
@@ -64,3 +75,5 @@ PostLoader.createPostHeader = function(postInfo) {
 
 	return headerDiv;
 }
+
+module.exports = PostLoader;

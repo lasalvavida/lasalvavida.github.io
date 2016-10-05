@@ -1,3 +1,20 @@
 <div class="post-content">
-	<img src="images/octocat.png"/>
+	<select id="post-one-kernel-select">
+		<option value="identity">Identity</option>
+		<option value="average">Average</option>
+		<option value="gaussian">Gaussian</option>
+		<option value="sobelX">SobelX</option>
+		<option value="sobelY">SobelY</option>
+		<option value="laplacian">Laplacian</option>
+		<option value="laplacianOfGaussian">Laplacian of Gaussian</option>
+	</select>
+
+	<input id="post-one-kernel-rows" type="number" value="3"/>
+	<input id="post-one-kernel-columns" type="number" value="3"/>
+	<div>
+		<div id="post-one-kernel" class="mat"/>
+	</div>
+	<canvas id="post-one-canvas-original" width="250" height="250"></canvas>
+	<canvas id="post-one-canvas-modified" width="250" height="250"></canvas>
+	<script src="${LOCAL_PATH}/js/build/bundle.js"></script>
 </div>
