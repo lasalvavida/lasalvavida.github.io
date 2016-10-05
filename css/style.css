@@ -5,6 +5,11 @@ body  {
 
 .post-title {
 	font-size : x-large;
+	cursor : pointer;
+}
+
+.post-title:hover {
+	text-decoration: underline;
 }
 
 .subtitle {
@@ -70,11 +75,51 @@ body  {
   border-left : 0px;
 }
 
-.title {
+.header {
 	background-color : #7AADFF;
 	box-sizing: border-box;
 	color : white;
-	font-size : xx-large;
 	padding : 40px 20px;
 	width : 100%;
+}
+
+.nav-bar {
+	background-color : #001B47;
+	color : white;
+	width : 100%
+	padding : 20px 10px;
+	min-height : 10px;
+}
+
+.nav-bar:after {
+	content : " ";
+	display : block;
+	height: 0;
+  clear: both;
+}
+
+.nav-item {
+	cursor : pointer;
+	padding : 10px;
+}
+
+.nav-item:hover {
+	text-decoration: underline;
+}
+
+.title {
+	font-size: xx-large;
+	cursor: pointer;
+}
+
+.title:hover {
+	text-decoration: underline;
+}
+
+.left {
+	float : left;
+}
+
+.right {
+	float : right;
 }

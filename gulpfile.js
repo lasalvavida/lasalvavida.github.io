@@ -39,7 +39,7 @@ gulp.task('build', function() {
     })
     .then(function(numFiles) {
       var manifest = {
-        numPosts : numFiles
+        numPosts : numFiles - 1
       };
       return fsWriteFile('./posts/manifest.json', JSON.stringify(manifest));
     });
