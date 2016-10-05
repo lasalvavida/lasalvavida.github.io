@@ -1,6 +1,6 @@
 {
 	"title" : "Understanding Kernel Convolution",
-	"author" : "Rob Taglang",
 	"date" : "October 5, 2016, 01:13 EST",
-	"tags" : ["thesis", "tutorial", "dsp"]
+	"tags" : ["thesis", "tutorial", "dsp"],
+	"next" : 2
 }

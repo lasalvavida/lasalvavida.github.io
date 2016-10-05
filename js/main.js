@@ -15,12 +15,12 @@ Promise.config({
   cancellation : true
 });
 
-var postServer = 'http://lasalvavida.github.io'
+var postServer = 'http://localhost:8080';
 var Blog = {};
 
 Blog.loadPosts = function() {
   var first = 0;
-  var last = 1;
+  var last = 2;
   var posts = PostLoader.loadPosts(postServer, first, last);
   postsLoaded(posts, first, last);
 }
