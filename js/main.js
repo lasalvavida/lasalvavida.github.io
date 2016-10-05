@@ -15,7 +15,7 @@ Promise.config({
   cancellation : true
 });
 
-var postServer = 'http://localhost:8080'
+var postServer = 'http://lasalvavida.github.io'
 var Blog = {};
 
 Blog.loadPosts = function() {
