@@ -41,7 +41,7 @@
     "restyle": "^0.5.1",
     "save-pixels": "^2.3.4",
     "serve-static": "^1.11.1",
-    "visionjs": "^0.0.19",
+    "visionjs": "^0.0.22",
     "webpack": "^1.13.2",
     "webpack-stream": "^3.2.0"
   }

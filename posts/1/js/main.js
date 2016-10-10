@@ -99,11 +99,10 @@ function redraw() {
     loadingImageData = contextModified.getImageData(0, 0, width, height);
     window.requestAnimationFrame(drawLoading);
   }
-  drawPromise =  originalImage.convolve(kernel, {
-    chunk : {
-      iterations : 512,
-      duration : 10
-    }
+  drawPromise =  originalImage.convolveAsync(kernel, {
+    iterations : 512,
+    duration : 10,
+    chunk : true
   }, modifiedImage).then(function(result) {
     loading = false;
     var channels = modifiedImage.channels;
@@ -112,9 +111,9 @@ function redraw() {
       var min = channel.min();
       var max = channel.max();
       if (min < 0 || max > 255) {
-        channel.apply(function(value) {
-          return Math.floor((value - min) / (max - min) * 255);
-        }, channel);
+        channel.apply(function(row, column) {
+          this.set(row, column, Math.floor(this.get(row, column) - min) / (max - min) * 255);
+        });
       }
     }
     modifiedImage.writeRawData(imageData.data);
