@@ -32,6 +32,8 @@ function fillBackground(context, canvas) {
 
 function drawLoading(context, canvas, startAngle, continueFunction) {
   fillBackground(context, canvas);
+  context.lineWidth = 10;
+  context.strokeStyle = '#FFFFFF'
   context.beginPath();
   context.arc(Math.floor(canvas.width/2), Math.floor(canvas.height/2), Math.min(canvas.width/5, canvas.height/5), startAngle, startAngle + Math.PI / 3);
   context.stroke();
