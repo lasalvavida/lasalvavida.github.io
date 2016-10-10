@@ -123,3 +123,17 @@ body  {
 .right {
 	float : right;
 }
+
+.table-div {
+	display : table-row;
+}
+
+.table-div div {
+	display : table-cell;
+	padding : 5px;
+}
+
+.table-title {
+	font-weight: bold;
+	text-align : center;
+}

@@ -72,7 +72,7 @@ var Blog =
 	  cancellation : true
 	});
 
-	var postServer = 'http://localhost:8080';
+	var postServer = 'http://lasalvavida.github.io';
 
 	function postsLoaded(posts, order) {
 	  for (var i = 0; i < order.length; i++) {
@@ -16394,7 +16394,7 @@ var Blog =
 	  return result;
 	};
 
-	Image.prototype.applyAsync = function(functionName, args, options, result) {
+	Image.prototype.applyAsync = function(functionName, args, result) {
 	  if (!defined(result)) {
 	    result = new Image(this.width, this.height, {
 	      colorspace : this.colorspace
@@ -16428,7 +16428,7 @@ var Blog =
 	};
 
 	Image.prototype.convolveAsync = function(kernel, options, result) {
-	  return this.applyAsync('convolveAsync', [kernel, options], options, result);
+	  return this.applyAsync('convolveAsync', [kernel, options], result);
 	};
 
 	Image.prototype.integral = function(result) {
@@ -16436,7 +16436,7 @@ var Blog =
 	};
 
 	Image.prototype.integralAsync = function(options, result) {
-	  return this.applyAsync('integralAsync', [options], options, result);
+	  return this.applyAsync('integralAsync', [options], result);
 	};
 
 
