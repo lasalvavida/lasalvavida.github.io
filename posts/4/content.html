@@ -1,0 +1,38 @@
+<div class="post-content">
+  <h3>Background</h3>
+  <p>
+    My last post comes along with a ton of improvements to
+    <a href="https://github.com/lasalvavida/visionjs">VisionJS</a>
+    in the way of making chunking a generic process that can be applied
+    to any cell operation.
+  </p>
+  <p>
+    Javascript is by it's nature single-threaded (with the exception of some
+    web worker implementations that enable native multi-threading), and there
+    is no process management by default. This means that if you have a long-running
+    task, the javascript engine will just execute that long-running task until it
+    completes, which will lock up other resources on the page.
+  </p>
+  <p>
+    Image processing can take some time, and as a result, the first version of
+    my kernel convolution demo that I wrote was unusable. I wrote a one-off
+    version of convolution that supported chunking for that demo.
+    After the specified number of operations, the convolution is paused briefly
+    to let the javascript engine do other things, like updating UI, etc.
+  </p>
+  <p>
+    However, for this last post, I wanted to compare the runtime for computing an
+    average filter with kernel convolution vs. using integral images, and in order
+    for that to be a fair comparison, the computation for the integral image filter
+    needed to be chunked the same way that the kernel convolution was. After some
+    hefty re-architecturing, it is now possible to chunk any matrix operation.
+  <h3>Results</h3>
+  <p>
+    The runtime for kernel convolution vs. integral images may vary somewhat from machine
+    to machine, but in general you should see a significant performance boost from integral
+    images, especially at large kernel sizes.
+  </p>
+  <p>
+    What are integral images and why are they so much faster?
+  </p>
+</div>
