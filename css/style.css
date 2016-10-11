@@ -131,9 +131,9 @@ body  {
 .table-div div {
 	display : table-cell;
 	padding : 5px;
+	text-align : center;
 }
 
 .table-title {
 	font-weight: bold;
-	text-align : center;
 }

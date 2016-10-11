@@ -2,6 +2,7 @@
 var Promise = require('bluebird');
 var fs = require('fs-extra');
 var gulp = require('gulp');
+var uglify = require('gulp-uglify');
 var webpack = require('webpack-stream');
 
 var fsReadFile = Promise.promisify(fs.readFile);
@@ -10,6 +11,14 @@ var fsWriteFile = Promise.promisify(fs.writeFile);
 
 gulp.task('build', function() {
   var postPath = './posts';
+  gulp.src('./js/main.js')
+    .pipe(webpack({
+      output : {
+        filename : 'bundle.js'
+      }
+    }))
+    .pipe(uglify())
+    .pipe(gulp.dest('./js/build/'));
   return fsReaddir(postPath)
     .then(function(fileNames) {
       return Promise.map(fileNames, function(fileName) {
@@ -23,11 +32,13 @@ gulp.task('build', function() {
                   filename : 'bundle.js'
                 },
                 externals : {
+                  bluebird: 'Promise',
+                  'chart.js' : 'Chart',
                   jquery: '$',
                   visionjs: 'Vision',
-                  bluebird: 'Promise'
                 }
               }))
+              .pipe(uglify())
               .pipe(gulp.dest(buildJsPath));
           })
           .catch(function(err) {

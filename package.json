@@ -4,7 +4,7 @@
   "description": "I blog here about stuff I'm working on.",
   "main": "index.js",
   "scripts": {
-    "build": "webpack && gulp build"
+    "build": "gulp build"
   },
   "repository": {
     "type": "git",
@@ -27,11 +27,13 @@
   "homepage": "https://github.com/lasalvavida/lasalvavida.github.io#readme",
   "dependencies": {
     "bluebird": "^3.4.6",
+    "chart.js": "^2.3.0",
     "connect": "^3.5.0",
     "defaults": "^1.0.3",
     "defined": "^1.0.0",
     "fs-extra": "^0.30.0",
     "gulp": "^3.9.1",
+    "gulp-uglify": "^2.0.0",
     "jquery": "^3.1.1",
     "restyle": "^0.5.1",
     "serve-static": "^1.11.1",

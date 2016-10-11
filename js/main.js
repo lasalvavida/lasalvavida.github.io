@@ -1,5 +1,6 @@
 'use strict';
 var $ = require('jquery');
+var Chart = require('chart.js');
 var Promise = require('bluebird');
 var Vision = require('visionjs');
 var defaults = require('defaults');
@@ -8,8 +9,9 @@ var Style = require('./Style');
 var PostLoader = require('./PostLoader');
 
 window.$ = window.jquery = $;
-window.Vision = window.visionjs = Vision;
+window.Chart = window['chart.js'] = Chart;
 window.Promise = window.bluebird = Promise;
+window.Vision = window.visionjs = Vision;
 
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;

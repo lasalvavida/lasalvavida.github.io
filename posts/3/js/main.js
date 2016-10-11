@@ -1,5 +1,6 @@
 'use strict';
 var $ = require('jquery');
+var Chart = require('chart.js');
 var Vision = require('visionjs');
 
 var VImage = Vision.Image;
@@ -8,10 +9,12 @@ var Kernel = Vision.Kernel;
 var canvasOriginal = document.getElementById('post-three-canvas-original');
 var canvasKernel = document.getElementById('post-three-canvas-kernel');
 var canvasIntegral = document.getElementById('post-three-canvas-integral');
+var canvasChart = document.getElementById('post-three-bar-chart');
 var startButton = $('#post-three-start-button');
 var contextOriginal = canvasOriginal.getContext('2d');
 var contextKernel = canvasKernel.getContext('2d');
 var contextIntegral = canvasIntegral.getContext('2d');
+var contextChart = canvasChart.getContext('2d');
 
 var imageData;
 var kernelImageData;
@@ -60,7 +63,6 @@ function drawIntegralLoading() {
 }
 
 function convolve() {
-  var kernel = Kernel.average(3, 3);
   kernelLoading = true;
   drawKernelLoading();
   var convolveOptions = {
@@ -71,6 +73,9 @@ function convolve() {
   var startTime;
   var endTime;
   startTime = Date.now();
+  var size = parseInt($('#post-three-size-select').val());
+  var kernel = Kernel.average(size, size);
+  var halfSize = Math.floor(size / 2);
   originalImage.convolveAsync(kernel, convolveOptions, kernelImage)
     .then(function(result) {
       kernelLoading = false;
@@ -78,21 +83,39 @@ function convolve() {
       contextKernel.putImageData(kernelImageData, 0, 0);
       endTime = Date.now();
       $('#post-three-kernel-time').text((endTime - startTime) + ' ms');
+      chartData.datasets[0].data[indexForValue[size]] = endTime - startTime;
+      barChart.update();
     }).then(function() {
       integralLoading = true;
       drawIntegralLoading();
       var integralOptions = {
         chunk : true,
         iterations : 512,
-        duration : 10,
-        edge : 'zero'
+        duration : 10
       };
       var args = [
-        function(i, j, func, args, options, result) {
-          result.set(i, j, (this.get(i+1, j+1, options) -
-            this.get(i-2, j+1, options) -
-            this.get(i+1, j-2, options) +
-            this.get(i-2, j-2, options)) / 9.0);
+        function(row, column, func, args, options, result) {
+          var topRow = row - (halfSize + 1);
+          var topColumn = column - (halfSize + 1);
+          if (topRow < 0) {
+            topRow = 0;
+          }
+          if (topColumn < 0) {
+            topColumn = 0;
+          }
+          var bottomRow = row + halfSize;
+          var bottomColumn = column + halfSize;
+          if (bottomRow >= this.rows) {
+            bottomRow = this.rows - 1;
+          }
+          if (bottomColumn >= this.columns) {
+            bottomColumn = this.columns - 1;
+          }
+          var area = (bottomRow - topRow) * (bottomColumn - topColumn);
+          result.set(row, column, (this.get(bottomRow, bottomColumn) -
+            this.get(bottomRow, topColumn) -
+            this.get(topRow, bottomColumn) +
+            this.get(topRow, topColumn)) / area);
         },
         undefined,
         integralOptions
@@ -106,6 +129,8 @@ function convolve() {
           contextIntegral.putImageData(integralImageData, 0, 0);
           endTime = Date.now();
           $('#post-three-integral-time').text((endTime - startTime) + ' ms');
+          chartData.datasets[1].data[indexForValue[size]] = endTime - startTime;
+          barChart.update();
         });
     });
 }
@@ -125,6 +150,33 @@ function draw() {
   kernelImageData = contextKernel.getImageData(0, 0, width, height);
   integralImageData = contextIntegral.getImageData(0, 0, width, height);
 }
+
+var chartData = {
+  labels: [],
+  datasets: [{
+    backgroundColor: 'rgba(255, 0, 0, 0.5)',
+    data: [],
+    label: 'Kernel Convolution Average Filter'
+  }, {
+    backgroundColor: 'rgba(0, 255, 0, 0.5)',
+    data: [],
+    label: 'Integral Image Average Filter'
+  }]
+};
+var index = 0;
+var indexForValue = {};
+$('#post-three-size-select > option').each(function() {
+  chartData.labels.push(this.text);
+  chartData.datasets[0].data.push(0);
+  chartData.datasets[1].data.push(0);
+  indexForValue[this.value] = index;
+  index++;
+});
+console.log(chartData);
+var barChart = new Chart(contextChart, {
+  type: 'bar',
+  data: chartData
+});
 
 var image = new Image();
 image.addEventListener("load", function() {
