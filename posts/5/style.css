@@ -17,3 +17,11 @@
 #post-five-clear {
   clear: left;
 }
+
+.dz-success-mark {
+  display: none;
+}
+
+.dz-error-mark {
+  display: none;
+}

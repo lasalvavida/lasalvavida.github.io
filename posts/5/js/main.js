@@ -119,19 +119,24 @@ function imageLoaded() {
 }
 
 image = new Image();
-image.addEventListener('load', imageLoaded, false);
 image.src = 'images/simple-shapes.png';
+image.addEventListener('load', imageLoaded, false);
 
 var dropzone = new Dropzone('form#post-five-dropzone', {
   accept: function(file, done) {
     var fr = new FileReader();
     fr.onload = function() {
       image.src = fr.result;
-      imageLoaded();
       done();
     }
     fr.readAsDataURL(file);
   },
   acceptedFiles: 'image/*',
+  autoProcessQueue: false,
+  maxFiles: 1,
+  maxfilesexceeded: function(file) {
+    this.removeAllFiles();
+    this.addFile(file)
+  },
   paramName: 'file'
 });
