@@ -1,0 +1,19 @@
+#post-five-dropzone {
+  background-color: lightgray;
+  cursor: pointer;
+  float: left;
+  text-align: center;
+  width: 250;
+}
+
+#post-five-dropzone:hover {
+  background-color: darkgray;
+}
+
+#post-five-canvas {
+  float: left;
+}
+
+#post-five-clear {
+  clear: left;
+}

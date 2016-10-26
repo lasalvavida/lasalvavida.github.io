@@ -172,7 +172,6 @@ $('#post-three-size-select > option').each(function() {
   indexForValue[this.value] = index;
   index++;
 });
-console.log(chartData);
 var barChart = new Chart(contextChart, {
   type: 'bar',
   data: chartData
