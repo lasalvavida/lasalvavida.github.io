@@ -74,14 +74,18 @@ function draw() {
   SURF.hessianDeterminantAsync(integral, 0, 0, options)
     .then(function(result) {
       matrix = result;
-      var histogram = matrix.histogram(256);
-      threshold = otsu(histogram, matrix.length);
-
       var min = matrix.min();
       var max = matrix.max();
+      matrix.apply(function(row, column) {
+        var value = Math.round((matrix.get(row, column) - min)/(max - min) * 255);
+        matrix.set(row, column, value);
+      });
+      var histogram = matrix.histogram(256);
+      threshold = otsu(histogram, matrix.length);
+      console.log(threshold);
 
-      slider.prop('min', '' + min);
-      slider.prop('max', '' + max);
+      slider.prop('min', '' + 0);
+      slider.prop('max', '' + 256);
       slider.prop('value', '' + threshold);
 
       loading = false;
@@ -90,7 +94,7 @@ function draw() {
 }
 
 function drawThresholded() {
-  if (originalImage) {
+  if (originalImage && matrix) {
     originalImage.writeRawData(imageData.data);
     matrix.apply(function(row, column) {
       var value = Math.abs(this.get(row, column));
