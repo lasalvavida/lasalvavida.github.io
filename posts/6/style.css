@@ -1,0 +1,30 @@
+#post-six-content {
+  overflow: auto;
+}
+
+#post-six-canvas {
+  float: left;
+  position: relative;
+  width: 500px;
+  height: 250px;
+  left: 0;
+  top: 0;
+  border-style: solid;
+  border-width: 1px;
+}
+
+#post-six-toggle-fullscreen {
+  top: 0;
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+}
+
+#post-six-toggle-fullscreen:hover {
+  color: blue;
+}
+
+#post-six-canvas-2d {
+  float: left;
+  clear: right;
+}

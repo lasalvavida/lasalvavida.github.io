@@ -1,4 +1,5 @@
 'use strict';
+var $ = require('jquery');
 var Three = require('three');
 var Vision = require('visionjs');
 
@@ -16,6 +17,27 @@ var context = canvas2d.getContext('2d');
 var width = 500;
 var height = 250;
 
+var renderer;
+var fullscreen = false;
+var postSixCanvas = $("#post-six-canvas");
+$('#post-six-toggle-fullscreen').click(function() {
+  if (renderer) {
+    if (fullscreen) {
+      postSixCanvas.css({position:'relative'});
+      postSixCanvas.width(width);
+      postSixCanvas.height(height);
+      renderer.setSize(width, height);
+      fullscreen = false;
+    } else {
+      postSixCanvas.css({position:'fixed'});
+      postSixCanvas.width(window.innerWidth);
+      postSixCanvas.height(window.innerHeight);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      fullscreen = true;
+    }
+  }
+});
+
 var image;
 function imageLoaded() {
   var width2d = canvas2d.width;
@@ -26,8 +48,10 @@ function imageLoaded() {
 
   var scene = new Three.Scene();
   var camera = new Three.PerspectiveCamera(75, width/height, 0.1, 1000);
-  var renderer = new Three.WebGLRenderer();
+  renderer = new Three.WebGLRenderer();
   renderer.setSize(width, height);
+  renderer.setClearColor(0xffffff);
+  renderer.render(scene, camera);
   canvas.appendChild(renderer.domElement);
   var light = new Three.PointLight(0xffffff);
   light.position.set(100,200,100);
@@ -74,14 +98,46 @@ function imageLoaded() {
 
       for (var row = 0; row < matrix.rows - 1; row++) {
         for (var column = 0; column < matrix.columns - 1; column++) {
-          geometry.faces.push(new Three.Face3(row * matrix.columns + column,
+          var face = new Three.Face3(row * matrix.columns + column,
             row * matrix.columns + column + 1,
-            (row + 1) * matrix.columns + column)
+            (row + 1) * matrix.columns + column
           );
-          geometry.faces.push(new Three.Face3(row * matrix.columns + column + 1,
-            (row + 1) * matrix.columns + column,
-            (row + 1) * matrix.columns + column + 1)
+          face.vertexColors[0] = new Three.Color('rgb(' +
+            originalImage.channels[0].get(row, column) + ',' +
+            originalImage.channels[1].get(row, column) + ',' +
+            originalImage.channels[2].get(row, column) + ');'
           );
+          face.vertexColors[1] = new Three.Color('rgb(' +
+            originalImage.channels[0].get(row, column + 1) + ',' +
+            originalImage.channels[1].get(row, column + 1) + ',' +
+            originalImage.channels[2].get(row, column + 1) + ');'
+          );
+          face.vertexColors[2] = new Three.Color('rgb(' +
+            originalImage.channels[0].get(row + 1, column) + ',' +
+            originalImage.channels[1].get(row + 1, column) + ',' +
+            originalImage.channels[2].get(row + 1, column) + ');'
+          );
+          geometry.faces.push(face);
+          face = new Three.Face3(row * matrix.columns + column + 1,
+            (row + 1) * matrix.columns + column + 1,
+            (row + 1) * matrix.columns + column
+          );
+          face.vertexColors[0] = new Three.Color('rgb(' +
+            originalImage.channels[0].get(row, column + 1) + ',' +
+            originalImage.channels[1].get(row, column + 1) + ',' +
+            originalImage.channels[2].get(row, column + 1) + ');'
+          );
+          face.vertexColors[1] = new Three.Color('rgb(' +
+            originalImage.channels[0].get(row + 1, column + 1) + ',' +
+            originalImage.channels[1].get(row + 1, column + 1) + ',' +
+            originalImage.channels[2].get(row + 1, column + 1) + ');'
+          );
+          face.vertexColors[2] = new Three.Color('rgb(' +
+            originalImage.channels[0].get(row + 1, column) + ',' +
+            originalImage.channels[1].get(row + 1, column) + ',' +
+            originalImage.channels[2].get(row + 1, column) + ');'
+          );
+          geometry.faces.push(face);
         }
       }
 
@@ -89,7 +145,7 @@ function imageLoaded() {
       geometry.computeFaceNormals();
       geometry.computeVertexNormals();
 
-      var material = new Three.MeshPhongMaterial({color: 0x55B663, side:Three.DoubleSide});
+      var material = new Three.MeshPhongMaterial({vertexColors: Three.VertexColors, side:Three.DoubleSide});
       var mesh = new Three.Mesh(geometry, material);
       scene.add(mesh);
 
@@ -102,10 +158,9 @@ function imageLoaded() {
         renderer.render(scene, camera);
       };
       render();
-      console.log('RENDER!');
   });
 }
 
 image = new Image();
-image.src = 'images/simple-shapes.png';
+image.src = 'images/Lenna.png';
 image.addEventListener('load', imageLoaded, false);
