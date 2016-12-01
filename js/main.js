@@ -3,6 +3,7 @@ var $ = require('jquery');
 var Chart = require('chart.js');
 var Dropzone = require('dropzone');
 var Promise = require('bluebird');
+var Three = require('three');
 var Vision = require('visionjs');
 var defaults = require('defaults');
 
@@ -14,6 +15,7 @@ window.Chart = window['chart.js'] = Chart;
 window.Promise = window.bluebird = Promise;
 window.Vision = window.visionjs = Vision;
 window.Dropzone = window.dropzone = Dropzone;
+window.Three = window.three = Three;
 
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;

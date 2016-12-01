@@ -27,6 +27,7 @@ function buildPost(postPath, fileName) {
             'chart.js': 'Chart',
             dropzone: 'Dropzone',
             jquery: '$',
+            three: 'Three',
             visionjs: 'Vision',
           }
         }))
