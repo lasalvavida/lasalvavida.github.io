@@ -93,7 +93,7 @@ function imageLoaded() {
 
       var geometry = new Three.Geometry();
       matrix.apply(function(row, column) {
-        geometry.vertices.push(new Three.Vector3(row, column, matrix.get(row, column)));
+        geometry.vertices.push(new Three.Vector3(row-125, column-125, matrix.get(row, column)));
       });
 
       for (var row = 0; row < matrix.rows - 1; row++) {
